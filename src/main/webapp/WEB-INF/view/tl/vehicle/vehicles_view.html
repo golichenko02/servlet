@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehicles</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .active {
+            background-color: #04AA6D;
+        }
+
+        #vehicles {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #vehicles td, #vehicles th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #vehicles tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #vehicles tr:hover {
+            background-color: #ddd;
+        }
+
+        #vehicles th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+
+        #describe:link, #describe:visited, #delete:link, #delete:visited {
+            background-color: white;
+            color: black;
+            border: 2px solid green;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        #describe:hover, #describe:active, #delete:hover, #delete:active {
+            background-color: green;
+            color: white;
+        }
+
+        input[type=text], select {
+            width: 35%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit] {
+            width: 20%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        div {
+            border-radius: 5px;
+            background-color: rgba(250, 250, 250, 0.24);
+            padding: 20px;
+        }
+    </style>
+
+</head>
+<body>
+<ul>
+    <li><a th:href="@{/tl/vehicles}">Транспортные средства</a></li>
+    <li><a th:href="@{/tl/journeys}">Поездки</a></li>
+    <li><a th:href="@{/tl/stops}">Остановки</a></li>
+</ul>
+<div style="padding:20px;margin-top:30px;background-color:#fafafa;">
+    <div>
+        <h2 align="center" s>Фильтр</h2>
+        <form align="center" method="post" th:action="@{/tl/vehicles/find}" th:object="${searchParams}">
+            <label for="pageNum">Номер страницы</label>
+            <br>
+            <input th:name="pageNumber" type="text" id="pageNum" placeholder="От 0 и больше">
+            <br>
+
+            <label for="pageSize">Количество элементов</label>
+            <br>
+            <input th:name="pageSize" type="text" id="pageSize" placeholder="От 1 и больше">
+            <br>
+            <label for="filterKey">Фильтр по полю: </label>
+            <br>
+            <select th:field="${searchParams.specificationFilter}" id="filterKey">
+                <option th:each="specifications : ${T(org.hillel.persistence.jpa.repository.specification.VehicleSpecification).values()}"
+                        th:value="${specifications}" th:text="${specifications}"></option>
+            </select>
+            <br>
+            <label for="filterValue">Значение для фильтра: </label>
+            <br>
+            <input th:name="value" id="filterValue" type="text" placeholder="Значение">
+            <br>
+            <label for="isAsc">Сортировать по</label>
+            <br>
+            <select th:name="isAsc" id="isAsc">
+                <option value="true">Возрастанию</option>
+                <option value="false">Убыванию</option>
+            </select>
+            <br>
+            <label for="sortBy">Сортировка по</label>
+            <br>
+            <select th:name="orderField" id="sortBy">
+                <option value="name">Имени</option>
+                <option value="id">Id</option>
+                <option value="active">Полю active</option>
+                <option value="createDate">Дате создания</option>
+                <option value="maxSeats">Количеству мест</option>
+            </select>
+            <br>
+
+            <input align="left" type="submit" value="Применить">
+        </form>
+    </div>
+    <br>
+    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+    <h1 align="center" s>Список всех транспортных средств</h1>
+    <table id="vehicles">
+        <thead>
+        <td>Порядковый номер</td>
+        <td>Название транспортного средства</td>
+        </thead>
+        <tbody>
+        <tr th:each="vehicle, iterator: ${vehicles}">
+            <td th:text="${iterator.index+1}"/>
+            <td th:text="${vehicle.name}"/>
+            <td align="center" style="background-color: #fafafa;border: #fafafa"><a id="describe"
+                                                                                    th:href="@{/tl/vehicles/{id}(id = ${vehicle.id})}">Посмотреть</a>
+            </td>
+            <td style="background-color: #fafafa;border: #fafafa"><a id="delete"
+                                                                     th:href="@{/tl/vehicles/delete/{vehicleId}(vehicleId = ${vehicle.id})}">Удалить</a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+    <div>
+        <form align="center" action="#" method="post" th:action="@{/tl/vehicles/save}" th:object="${vehSave}">
+            <label for="name">Название транспортного средства</label>
+            <br>
+            <input th:name="name" type="text" id="name" placeholder="Название"/>
+
+            <br>
+            <label for="seats">Максимальное количество мест</label>
+            <br>
+            <input th:name="maxSeats" type="text" id="seats" placeholder="Количество мест"/>
+            <br>
+            <input type="submit" th:value="Добавить"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

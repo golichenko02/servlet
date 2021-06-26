@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehicle Info</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .active {
+            background-color: #04AA6D;
+        }
+
+        #info {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: separate;
+            width: 100%;
+        }
+
+        #info td, #journeys th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #info tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #info tr:hover {
+            background-color: #ddd;
+        }
+
+        #info th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: darkseagreen;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li><a th:href="@{/tl/vehicles}">Транспортные средства</a></li>
+    <li><a th:href="@{/tl/journeys}">Поездки</a></li>
+    <li><a th:href="@{/tl/stops}">Остановки</a></li>
+</ul>
+<div style="padding:20px;margin-top:30px;background-color:#fafafa;">
+    <h1 align="center" s>Информация о транспортном средстве</h1>
+    <table id="info" th:object="${vehicle}">
+        <tr>
+            <th width="30%">Название:</th>
+            <td th:text="${vehicle.name}"/>
+        </tr>
+        <tr>
+            <th>Максимальное количество мест:</th>
+            <td th:text="${vehicle.maxSeats}"/>
+        </tr>
+        <tr>
+            <th>Дата создания:</th>
+            <td th:text="${vehicle.createDate}"/>
+        </tr>
+        <tr>
+            <th>Активный:</th>
+            <td th:text="${vehicle.active}"/>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

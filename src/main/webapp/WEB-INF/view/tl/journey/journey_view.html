@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Journey Info</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .active {
+            background-color: #04AA6D;
+        }
+
+        #info {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: separate;
+            width: 100%;
+        }
+
+        #info td, #journeys th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #info tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #info tr:hover {
+            background-color: #ddd;
+        }
+
+        #info th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: darkseagreen;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li><a th:href="@{/tl/vehicles}">Транспортные средства</a></li>
+    <li><a th:href="@{/tl/journeys}">Поездки</a></li>
+    <li><a th:href="@{/tl/stops}">Остановки</a></li>
+</ul>
+<div style="padding:20px;margin-top:30px;background-color:#fafafa;">
+    <h1 align="center" s>Информация о поездке</h1>
+    <table id="info" th:object="${journey}">
+        <tr>
+            <th width="30%">Место отправления:</th>
+            <td th:text="${journey.stationFrom}"/>
+        </tr>
+        <tr>
+            <th>Место прибытия:</th>
+            <td th:text="${journey.stationTo}"/>
+        </tr>
+        <tr>
+            <th>Время отправления:</th>
+            <td th:text="${journey.departure}"/>
+        </tr>
+        <tr>
+            <th>Время прибытия:</th>
+            <td th:text="${journey.arrival}"/>
+        </tr>
+        <tr>
+            <th>Дата создания:</th>
+            <td th:text="${journey.createDate}"/>
+        </tr>
+        <tr>
+            <th>Название транспортного средства:</th>
+            <td th:text="${journey.vehicleName}"/>
+        </tr>
+        <tr>
+            <th>Количество остановок:</th>
+            <td th:text="${journey.stopsCount}"/>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
